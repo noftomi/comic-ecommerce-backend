@@ -25,7 +25,7 @@ Editá `.env` y reemplazá los valores entre `<...>` con los reales.
 
 ### 3. Levantar la base de datos
 
-Desde la raíz del monorepo (`Comics-Corp/`):
+Desde el directorio del backend (`comic-ecommerce-backend/`):
 
 ```bash
 docker compose up -d db
@@ -58,4 +58,4 @@ El servidor corre en `http://localhost:3000`.
 ## Uso diario
 
 La base de datos persiste entre reinicios del contenedor gracias al volumen Docker.
-Si necesitás detenerla: `docker compose down` (desde la raíz del monorepo).
+Si necesitás detenerla: `docker compose down` (desde el directorio del backend).
