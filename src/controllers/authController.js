@@ -22,7 +22,11 @@ const register = async (req, res) => {
       data: { email, password: hashedPassword, name, role: esSeller ? 'SELLER' : 'CLIENT' }
     });
     req.session.userId = user.id;
-    res.status(201).json({ id: user.id, email: user.email, name: user.name, role: user.role });
+    const safeUser = await getPrisma().user.findUnique({
+      where: { id: user.id },
+      select: { id: true, email: true, name: true, role: true, phone: true, avatarUrl: true }
+    });
+    res.status(201).json(safeUser);
   } catch (error) {
     console.error('register error:', error);
     res.status(500).json({ error: 'Error al registrar usuario' });
@@ -39,7 +43,11 @@ const login = async (req, res) => {
     if (!valid) return res.status(401).json({ error: 'Credenciales inválidas' });
 
     req.session.userId = user.id;
-    res.json({ id: user.id, email: user.email, name: user.name, role: user.role });
+    const safeUser = await getPrisma().user.findUnique({
+      where: { id: user.id },
+      select: { id: true, email: true, name: true, role: true, phone: true, avatarUrl: true }
+    });
+    res.json(safeUser);
   } catch (error) {
     console.error('login error:', error);
     res.status(500).json({ error: 'Error al iniciar sesión' });
