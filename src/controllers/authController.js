@@ -7,13 +7,13 @@ const prisma = new PrismaClient({ adapter });
 
 const register = async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, esSeller } = req.body;
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) return res.status(400).json({ error: 'El email ya está registrado' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name, role: 'CLIENT' }
+      data: { email, password: hashedPassword, name, role: esSeller ? 'SELLER' : 'CLIENT' }
     });
     req.session.userId = user.id;
     res.status(201).json({ id: user.id, email: user.email, name: user.name, role: user.role });
