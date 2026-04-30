@@ -1,15 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
 const bcrypt = require('bcryptjs');
-
-let prisma;
-function getPrisma() {
-  if (!prisma) {
-    const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-    prisma = new PrismaClient({ adapter });
-  }
-  return prisma;
-}
+const { getPrisma } = require('../lib/prisma');
 
 const register = async (req, res) => {
   try {
@@ -19,14 +9,11 @@ const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await getPrisma().user.create({
-      data: { email, password: hashedPassword, name, role: esSeller ? 'SELLER' : 'CLIENT' }
-    });
-    req.session.userId = user.id;
-    const safeUser = await getPrisma().user.findUnique({
-      where: { id: user.id },
+      data: { email, password: hashedPassword, name, role: esSeller ? 'SELLER' : 'CLIENT' },
       select: { id: true, email: true, name: true, role: true, phone: true, avatarUrl: true }
     });
-    res.status(201).json(safeUser);
+    req.session.userId = user.id;
+    res.status(201).json(user);
   } catch (error) {
     console.error('register error:', error);
     res.status(500).json({ error: 'Error al registrar usuario' });
@@ -43,10 +30,7 @@ const login = async (req, res) => {
     if (!valid) return res.status(401).json({ error: 'Credenciales inválidas' });
 
     req.session.userId = user.id;
-    const safeUser = await getPrisma().user.findUnique({
-      where: { id: user.id },
-      select: { id: true, email: true, name: true, role: true, phone: true, avatarUrl: true }
-    });
+    const { password: _pw, createdAt: _ca, ...safeUser } = user;
     res.json(safeUser);
   } catch (error) {
     console.error('login error:', error);

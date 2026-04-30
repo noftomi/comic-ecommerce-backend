@@ -1,21 +1,27 @@
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
-
-let prisma;
-function getPrisma() {
-  if (!prisma) {
-    const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-    prisma = new PrismaClient({ adapter });
-  }
-  return prisma;
-}
+const { getPrisma } = require('../lib/prisma');
 
 const updateMe = async (req, res) => {
   try {
-    const { name, phone } = req.body;
+    const { name, phone } = req.body || {};
     const data = {};
-    if (name !== undefined) data.name = name;
-    if (phone !== undefined) data.phone = phone;
+
+    if (name !== undefined) {
+      if (typeof name !== 'string' || name.trim().length === 0) {
+        return res.status(400).json({ error: 'El nombre no puede estar vacío' });
+      }
+      data.name = name.trim();
+    }
+
+    if (phone !== undefined) {
+      if (phone !== null && typeof phone !== 'string') {
+        return res.status(400).json({ error: 'El teléfono debe ser una cadena de texto' });
+      }
+      data.phone = phone === null ? null : phone.trim() || null;
+    }
+
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({ error: 'No se proporcionaron campos para actualizar' });
+    }
 
     const user = await getPrisma().user.update({
       where: { id: req.session.userId },
