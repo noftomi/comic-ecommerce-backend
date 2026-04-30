@@ -62,7 +62,7 @@ const me = async (req, res) => {
   try {
     const user = await getPrisma().user.findUnique({
       where: { id: req.session.userId },
-      select: { id: true, email: true, name: true, role: true }
+      select: { id: true, email: true, name: true, role: true, phone: true, avatarUrl: true }
     });
     res.json(user);
   } catch (error) {
