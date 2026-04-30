@@ -2,6 +2,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// URL is provided via prisma.config.ts (Prisma 6+ pattern)
 datasource db {
   provider = "postgresql"
 }
@@ -49,6 +50,8 @@ model CartItem {
   comic    Comic @relation(fields: [comicId], references: [id])
   comicId  Int
   quantity Int   @default(1)
+
+  @@unique([userId, comicId])
 }
 
 model Order {
@@ -86,4 +89,6 @@ model Review {
   rating    Int
   comment   String?
   createdAt DateTime @default(now())
+
+  @@unique([userId, comicId])
 }
