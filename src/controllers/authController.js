@@ -5,13 +5,36 @@ const prisma = new PrismaClient();
 
 const register = async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, esSeller, cuil, telefono, pais } = req.body;
+    const normalizedCuil = typeof cuil === 'string' ? cuil.replace(/\D/g, '') : '';
+    const normalizedPhone = typeof telefono === 'string' ? telefono.trim() : '';
+    const normalizedCountry = typeof pais === 'string' ? pais.trim() : '';
+
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) return res.status(400).json({ error: 'El email ya está registrado' });
 
+    if (esSeller) {
+      if (!normalizedCuil || normalizedCuil.length !== 11) {
+        return res.status(400).json({ error: 'El CUIL debe tener 11 dígitos' });
+      }
+
+      const existingByCuil = await prisma.user.findFirst({ where: { cuil: normalizedCuil } });
+      if (existingByCuil) {
+        return res.status(400).json({ error: 'El CUIL ya está registrado' });
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name, role: 'CLIENT' }
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        role: 'CLIENT',
+        cuil: esSeller ? normalizedCuil : null,
+        phone: normalizedPhone || null,
+        city: normalizedCountry || null,
+      }
     });
     req.session.userId = user.id;
     res.status(201).json({ id: user.id, email: user.email, name: user.name, role: user.role });
