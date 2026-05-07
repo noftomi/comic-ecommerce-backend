@@ -9,18 +9,21 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   password  String
   name      String
-  role      Role     @default(CLIENT)
+  role      Role      @default(CLIENT)
   phone     String?
   avatarUrl String?
-  createdAt DateTime @default(now())
+  cuil      String?   @unique
+  country   String?
+  birthDate DateTime?
+  createdAt DateTime  @default(now())
   cart      CartItem[]
   orders    Order[]
   reviews   Review[]
-  favorites Comic[]  @relation("Favorites")
+  favorites Comic[]   @relation("Favorites")
 }
 
 enum Role {
