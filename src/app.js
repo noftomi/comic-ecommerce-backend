@@ -17,6 +17,9 @@ app.use(session({
 // Rutas
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/favorites', require('./routes/favorites'));
+app.use('/api/comics/:comicId/reviews', require('./routes/reviews'));
+app.use('/api/reviews', require('./routes/reviews'));
 
 app.get('/', (req, res) => res.json({ message: 'Comic eCommerce API running' }));
 
