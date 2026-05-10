@@ -3,6 +3,8 @@ const { getPrisma } = require('../lib/prisma');
 const getReviews = async (req, res) => {
   try {
     const comicId = parseInt(req.params.comicId);
+    if (isNaN(comicId)) return res.status(400).json({ error: 'ID de cómic inválido' });
+
     const reviews = await getPrisma().review.findMany({
       where: { comicId },
       include: {
@@ -20,11 +22,16 @@ const getReviews = async (req, res) => {
 const createReview = async (req, res) => {
   try {
     const comicId = parseInt(req.params.comicId);
+    if (isNaN(comicId)) return res.status(400).json({ error: 'ID de cómic inválido' });
+
     const { rating, comment } = req.body;
 
-    if (!rating || rating < 1 || rating > 5) {
-      return res.status(400).json({ error: 'La puntuación debe ser entre 1 y 5' });
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'La puntuación debe ser un número entero entre 1 y 5' });
     }
+
+    const comic = await getPrisma().comic.findUnique({ where: { id: comicId } });
+    if (!comic) return res.status(404).json({ error: 'Cómic no encontrado' });
 
     const existing = await getPrisma().review.findUnique({
       where: { userId_comicId: { userId: req.session.userId, comicId } }
@@ -54,6 +61,8 @@ const createReview = async (req, res) => {
 const deleteReview = async (req, res) => {
   try {
     const reviewId = parseInt(req.params.id);
+    if (isNaN(reviewId)) return res.status(400).json({ error: 'ID de reseña inválido' });
+
     const review = await getPrisma().review.findUnique({ where: { id: reviewId } });
 
     if (!review) return res.status(404).json({ error: 'Reseña no encontrada' });
