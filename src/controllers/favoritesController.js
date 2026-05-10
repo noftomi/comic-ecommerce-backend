@@ -17,6 +17,7 @@ const getFavorites = async (req, res) => {
         }
       }
     });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
     res.json(user.favorites);
   } catch (error) {
     console.error('getFavorites error:', error);
