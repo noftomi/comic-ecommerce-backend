@@ -8,6 +8,7 @@ const prisma = new PrismaClient({ adapter })
 const comics = [
   // ── MARVEL ──────────────────────────────────────────────────────────────
   {
+    id: 1,
     title: 'The Amazing Spider-Man',
     author: 'Todd McFarlane',
     description: 'La batalla final entre Spider-Man y Venom. Primera aparición completa del simbionte en el cuerpo de Eddie Brock.',
@@ -22,6 +23,7 @@ const comics = [
     issueNumber: 'Nº 300',
   },
   {
+    id: 2,
     title: "Avengers: Earth's Mightiest Heroes",
     author: 'Brian Michael Bendis',
     description: 'Los héroes más poderosos de la Tierra se reúnen para detener a Kang el Conquistador en una épica intergaláctica.',
@@ -36,6 +38,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 3,
     title: 'X-Men: Mutant Genesis',
     author: 'Jim Lee',
     description: 'El renacimiento de la patrulla mutante bajo la legendaria pluma de Jim Lee. Magneto desata su poder sobre el mundo.',
@@ -50,6 +53,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 4,
     title: 'Daredevil: La Saga',
     author: 'Frank Miller',
     description: 'Matt Murdock y Elektra fundan el Puño para destruir a la Mano en una historia de traición y redención.',
@@ -64,6 +68,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 5,
     title: 'Wolverine: Old Man Logan',
     author: 'Mark Millar',
     description: 'En un futuro distópico donde los villanos ganaron, Logan recorre una América post-apocalíptica para salvar a su familia.',
@@ -78,6 +83,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 6,
     title: 'Thor: God of Thunder Vol. 1',
     author: 'Jason Aaron',
     description: 'Un dios asesino de dioses acecha el universo a través del tiempo. Thor en tres épocas distintas enfrenta a Gorr.',
@@ -92,6 +98,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 7,
     title: 'Iron Man: Extremis',
     author: 'Warren Ellis',
     description: 'Tony Stark se enfrenta a la tecnología Extremis, un nanosuero que redefine los límites de lo humano y lo mecánico.',
@@ -106,6 +113,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 8,
     title: 'Captain America: The Winter Soldier',
     author: 'Ed Brubaker',
     description: 'Steve Rogers descubre que Bucky Barnes, su compañero caído, fue convertido en un arma letal por los soviéticos.',
@@ -120,6 +128,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 9,
     title: 'Guardians of the Galaxy Vol. 1',
     author: 'Brian Michael Bendis',
     description: 'Una pandilla de inadaptados cósmicos protege la galaxia. Star-Lord lidera al equipo más disfuncional del universo.',
@@ -134,6 +143,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 10,
     title: 'Black Panther: A Nation Under Our Feet',
     author: 'Ta-Nehisi Coates',
     description: "T'Challa enfrenta una revolución en Wakanda mientras cuestiona su rol como rey en una nación que lo desafía.",
@@ -148,6 +158,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 11,
     title: 'Doctor Strange: The Oath',
     author: 'Brian K. Vaughan',
     description: 'El Hechicero Supremo investiga un atentado contra su propia vida mientras busca una cura para una enfermedad mortal.',
@@ -162,6 +173,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 12,
     title: 'Punisher MAX Vol. 1',
     author: 'Garth Ennis',
     description: 'Frank Castle regresa con la versión más oscura y brutal del Castigador. Sin código de colores. Solo violencia.',
@@ -176,6 +188,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 13,
     title: 'Ms. Marvel Vol. 1: No Normal',
     author: 'G. Willow Wilson',
     description: 'Kamala Khan descubre sus poderes polimórficos y debe equilibrar su identidad entre dos mundos.',
@@ -190,6 +203,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 14,
     title: 'Moon Knight: From the Dead',
     author: 'Warren Ellis',
     description: 'Marc Spector enfrenta amenazas sobrenaturales mientras su psique fragmentada cuestiona la realidad misma.',
@@ -204,6 +218,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 15,
     title: 'Deadpool: Kills the Marvel Universe',
     author: 'Cullen Bunn',
     description: 'Wade Wilson pierde la razón y decide eliminar a todos los héroes y villanos del universo Marvel. Sin excepciones.',
@@ -219,6 +234,7 @@ const comics = [
   },
   // ── DC ──────────────────────────────────────────────────────────────────
   {
+    id: 16,
     title: 'Batman: Year One',
     author: 'Frank Miller',
     description: 'El origen del Caballero Oscuro por Frank Miller. Bruce Wayne vuelve a Gotham y comienza su cruzada solitaria.',
@@ -233,6 +249,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 17,
     title: 'Lobo: Último Czarniano',
     author: 'Alan Grant',
     description: 'El bounty hunter más peligroso del universo DC. Violencia, humor negro y caos cósmico en cada página.',
@@ -247,6 +264,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 18,
     title: 'The Dark Knight Returns',
     author: 'Frank Miller',
     description: 'Un Batman envejecido vuelve de su retiro para limpiar Gotham una última vez. Obra cumbre del cómic moderno.',
@@ -261,6 +279,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 19,
     title: 'Watchmen',
     author: 'Alan Moore',
     description: 'Superhéroes retirados son asesinados uno a uno. Una deconstrucción total del género que redefinió el cómic.',
@@ -275,6 +294,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 20,
     title: 'Superman: Red Son',
     author: 'Mark Millar',
     description: '¿Qué hubiera pasado si la cápsula de Kal-El hubiera caído en la URSS? Un elseworlds definitivo.',
@@ -289,6 +309,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 21,
     title: 'Green Lantern: Secret Origin',
     author: 'Geoff Johns',
     description: 'Hal Jordan descubre el anillo del Cuerpo de Linternas Verdes y se convierte en el mayor lanterna de la galaxia.',
@@ -303,6 +324,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 22,
     title: 'Sandman Vol. 1: Preludes & Nocturnes',
     author: 'Neil Gaiman',
     description: 'Morfeo, el Rey de los Sueños, escapa de una prisión mágica y parte en busca de sus artefactos robados.',
@@ -317,6 +339,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 23,
     title: 'V for Vendetta',
     author: 'Alan Moore',
     description: 'En una Inglaterra fascista, un misterioso enmascarado lleva a cabo una campaña de caos contra el régimen totalitario.',
@@ -331,6 +354,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 24,
     title: 'Swamp Thing: Saga of the Swamp Thing',
     author: 'Alan Moore',
     description: 'Alan Moore redefine a Swamp Thing: no es un humano convertido en planta, sino la planta que cree ser humano.',
@@ -345,6 +369,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 25,
     title: 'Justice League: Origin',
     author: 'Geoff Johns',
     description: 'El primer encuentro entre Batman, Superman, Wonder Woman y los demás en el universo New 52 de DC.',
@@ -359,6 +384,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 26,
     title: 'The Flash: Rebirth',
     author: 'Geoff Johns',
     description: 'Barry Allen regresa de entre los muertos y debe enfrentar la amenaza de Zoom mientras recupera su lugar como Flash.',
@@ -373,6 +399,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 27,
     title: 'Wonder Woman Vol. 1: Blood',
     author: 'Brian Azzarello',
     description: 'Diana descubre que su origen es una mentira y debe proteger a una mortal embarazada de los dioses del Olimpo.',
@@ -388,6 +415,7 @@ const comics = [
   },
   // ── IMAGE COMICS ────────────────────────────────────────────────────────
   {
+    id: 28,
     title: 'Saga Vol. 1',
     author: 'Brian K. Vaughan',
     description: 'Una pareja de razas enemigas huye con su bebé recién nacido a través de una galaxia en guerra. Épica espacial adulta.',
@@ -402,6 +430,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 29,
     title: 'The Walking Dead Vol. 1: Days Gone Bye',
     author: 'Robert Kirkman',
     description: 'Rick Grimes despierta de un coma en un mundo invadido por zombis. El comienzo de la saga más larga del cómic indie.',
@@ -416,6 +445,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 30,
     title: 'Invincible Vol. 1: Family Matters',
     author: 'Robert Kirkman',
     description: 'Mark Grayson hereda los poderes de su padre pero pronto descubre que ser superhéroe tiene un costo devastador.',
@@ -430,6 +460,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 31,
     title: 'Spawn Origins Vol. 1',
     author: 'Todd McFarlane',
     description: 'Al Simmons, un agente de la CIA asesinado, vuelve del infierno convertido en un soldado infernal con poderes oscuros.',
@@ -444,6 +475,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 32,
     title: 'East of West Vol. 1',
     author: 'Jonathan Hickman',
     description: 'En un Estados Unidos alternativo dividido en naciones, los Cuatro Jinetes del Apocalipsis desatan el fin del mundo.',
@@ -458,6 +490,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 33,
     title: 'Lazarus Vol. 1',
     author: 'Greg Rucka',
     description: 'En un futuro corporativo, Forever Carlyle es el arma biológica de su familia. Una historia de lealtad y dudas.',
@@ -472,6 +505,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 34,
     title: 'Monstress Vol. 1: Awakening',
     author: 'Marjorie Liu',
     description: 'En un mundo matriarcal de magia y guerra, Maika lleva dentro un monstruo antiguo que despertó hambriento.',
@@ -486,6 +520,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 35,
     title: 'Paper Girls Vol. 1',
     author: 'Brian K. Vaughan',
     description: 'Cuatro repartidoras de periódicos de los 80 quedan atrapadas en una guerra temporal que amenaza toda la existencia.',
@@ -501,6 +536,7 @@ const comics = [
   },
   // ── DARK HORSE ──────────────────────────────────────────────────────────
   {
+    id: 36,
     title: 'Sin City Vol. 1: The Hard Goodbye',
     author: 'Frank Miller',
     description: 'Marv, un matón con corazón de oro, sale a vengar la muerte de la única persona que lo amó. Noir en estado puro.',
@@ -515,6 +551,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 37,
     title: 'Hellboy Vol. 1: Seed of Destruction',
     author: 'Mike Mignola',
     description: 'Hellboy investiga la resurrección de un antiguo dios lovecraftiano mientras descubre la verdad sobre su origen.',
@@ -529,6 +566,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 38,
     title: 'BPRD Vol. 1: Hollow Earth',
     author: 'Mike Mignola',
     description: 'El equipo de Defensa y Paranormalidad enfrenta una amenaza subterránea mientras Hellboy está fuera de combate.',
@@ -543,6 +581,7 @@ const comics = [
     issueNumber: 'Vol. 1',
   },
   {
+    id: 39,
     title: 'Star Wars: Dark Empire',
     author: 'Tom Veitch',
     description: 'El Emperador renace en un cuerpo clónico y Luke Skywalker cae al Lado Oscuro. Secuela canónica de Return of the Jedi.',
@@ -557,6 +596,7 @@ const comics = [
     issueNumber: null,
   },
   {
+    id: 40,
     title: 'Aliens Vol. 1',
     author: 'Mark Verheiden',
     description: 'Hicks y Newt, supervivientes de LV-426, enfrentan una invasión Xenomorph en la Tierra. Terror sci-fi en su máxima expresión.',
@@ -574,10 +614,13 @@ const comics = [
 
 async function main() {
   console.log('Seeding comics...')
-  await prisma.comic.createMany({
-    data: comics,
-    skipDuplicates: true,
-  })
+  for (const comic of comics) {
+    await prisma.comic.upsert({
+      where: { id: comic.id },
+      update: comic,
+      create: comic,
+    })
+  }
   console.log(`✓ ${comics.length} comics seeded successfully`)
 }
 
