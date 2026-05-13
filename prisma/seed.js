@@ -625,12 +625,15 @@ async function main() {
       name: 'Admin Comics Corp',
       password: hashedAdminPassword,
       role: 'ADMIN',
+      emailVerified: true,
+      verificationToken: null,
     },
     create: {
       email: adminEmail,
       password: hashedAdminPassword,
       name: 'Admin Comics Corp',
       role: 'ADMIN',
+      emailVerified: true,
     },
   })
   console.log(`Admin user ready: ${adminEmail} / ${adminPassword}`)
