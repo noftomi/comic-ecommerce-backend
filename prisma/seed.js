@@ -614,13 +614,24 @@ const comics = [
 
 async function main() {
   console.log('Seeding comics...')
-  for (const comic of comics) {
-    await prisma.comic.upsert({
-      where: { id: comic.id },
-      update: comic,
-      create: comic,
-    })
-  }
+
+  // Limpiar en orden correcto respetando foreign keys
+  await prisma.orderItem.deleteMany()
+  await prisma.cartItem.deleteMany()
+  await prisma.review.deleteMany()
+  await prisma.$executeRaw`DELETE FROM "_Favorites"`
+  await prisma.comic.deleteMany()
+
+  // Reiniciar la secuencia para que los IDs queden 1, 2, 3...
+  await prisma.$executeRaw`ALTER SEQUENCE "Comic_id_seq" RESTART WITH 1`
+
+  // Insertar sin pasar id — Prisma los asigna en orden secuencial
+  const data = comics.map(({ id, ...rest }) => rest)
+  await prisma.comic.createMany({ data })
+
+  // Actualizar la secuencia al máximo id insertado
+  await prisma.$executeRaw`SELECT setval('"Comic_id_seq"', (SELECT MAX(id) FROM "Comic"))`
+
   console.log(`✓ ${comics.length} comics seeded successfully`)
 }
 
