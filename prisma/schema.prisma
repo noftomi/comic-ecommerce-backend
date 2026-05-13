@@ -42,6 +42,10 @@ model Comic {
   imageUrl    String?
   category    String?
   language    String?
+  publisher   String?
+  pages       Int?
+  edition     String?
+  issueNumber String?
   createdAt   DateTime   @default(now())
   cartItems   CartItem[]
   orderItems  OrderItem[]
