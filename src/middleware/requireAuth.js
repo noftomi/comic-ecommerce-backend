@@ -5,6 +5,24 @@ const requireAuth = (req, res, next) => {
   next();
 };
 
+const requireRoles = (roles) => async (req, res, next) => {
+  if (!req.session.userId) return res.status(401).json({ error: 'No autenticado' });
+  try {
+    const user = await getPrisma().user.findUnique({
+      where: { id: req.session.userId },
+      select: { id: true, role: true }
+    });
+    if (!user || !roles.includes(user.role)) {
+      return res.status(403).json({ error: 'Acceso denegado' });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error('requireRoles error:', error);
+    res.status(500).json({ error: 'Error de autenticación' });
+  }
+};
+
 const requireAdmin = async (req, res, next) => {
   if (!req.session.userId) return res.status(401).json({ error: 'No autenticado' });
   try {
@@ -23,4 +41,4 @@ const requireAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { requireAuth, requireAdmin };
+module.exports = { requireAuth, requireAdmin, requireRoles };

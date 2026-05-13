@@ -1,6 +1,7 @@
 require('dotenv').config()
 const { PrismaClient } = require('@prisma/client')
 const { PrismaPg } = require('@prisma/adapter-pg')
+const bcrypt = require('bcryptjs')
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
@@ -613,6 +614,27 @@ const comics = [
 ]
 
 async function main() {
+  const adminEmail = 'admin@comicscorp.local'
+  const adminPassword = 'Admin123!'
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10)
+
+  console.log('Seeding admin user...')
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {
+      name: 'Admin Comics Corp',
+      password: hashedAdminPassword,
+      role: 'ADMIN',
+    },
+    create: {
+      email: adminEmail,
+      password: hashedAdminPassword,
+      name: 'Admin Comics Corp',
+      role: 'ADMIN',
+    },
+  })
+  console.log(`Admin user ready: ${adminEmail} / ${adminPassword}`)
+
   console.log('Seeding comics...')
   for (const comic of comics) {
     await prisma.comic.upsert({
@@ -621,6 +643,9 @@ async function main() {
       create: comic,
     })
   }
+  await prisma.$executeRawUnsafe(
+    `SELECT setval(pg_get_serial_sequence('"Comic"', 'id'), COALESCE((SELECT MAX(id) FROM "Comic"), 1))`
+  )
   console.log(`✓ ${comics.length} comics seeded successfully`)
 }
 

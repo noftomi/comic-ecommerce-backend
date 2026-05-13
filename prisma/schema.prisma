@@ -24,6 +24,7 @@ model User {
   orders    Order[]
   reviews   Review[]
   favorites Comic[]   @relation("Favorites")
+  sellerComics Comic[] @relation("SellerComics")
 }
 
 enum Role {
@@ -46,7 +47,11 @@ model Comic {
   pages       Int?
   edition     String?
   issueNumber String?
+  isActive    Boolean    @default(true)
   createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  seller       User?      @relation("SellerComics", fields: [sellerId], references: [id])
+  sellerId     Int?
   cartItems   CartItem[]
   orderItems  OrderItem[]
   reviews     Review[]
