@@ -637,10 +637,12 @@ async function main() {
 
   console.log('Seeding comics...')
   for (const comic of comics) {
+    const { id, ...comicData } = comic
+
     await prisma.comic.upsert({
-      where: { id: comic.id },
-      update: comic,
-      create: comic,
+      where: { id },
+      update: comicData,
+      create: comicData,
     })
   }
   await prisma.$executeRawUnsafe(
