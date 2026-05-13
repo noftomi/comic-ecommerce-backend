@@ -17,9 +17,13 @@ model User {
   phone     String?
   avatarUrl String?
   cuil      String?   @unique
-  country   String?
-  birthDate DateTime?
-  createdAt DateTime  @default(now())
+  country              String?
+  birthDate            DateTime?
+  emailVerified        Boolean   @default(false)
+  verificationToken    String?   @unique
+  passwordResetToken   String?   @unique
+  passwordResetExpires DateTime?
+  createdAt            DateTime  @default(now())
   cart      CartItem[]
   orders    Order[]
   reviews   Review[]

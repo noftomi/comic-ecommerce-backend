@@ -22,6 +22,8 @@ app.use('/api/uploads', require('./routes/uploads'));
 app.use('/api/management/comics', require('./routes/managementComics'));
 app.use('/api/comics/:comicId/reviews', require('./routes/reviews'));
 app.use('/api/comics', require('./routes/comics'));
+app.use('/api/cart', require('./routes/cart'));
+app.use('/api/orders', require('./routes/orders'));
 
 app.get('/', (req, res) => res.json({ message: 'Comic eCommerce API running' }));
 
