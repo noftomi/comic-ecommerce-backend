@@ -7,10 +7,10 @@ router.get('/', requireAuth, async (req, res) => {
   const userId = req.session.userId
   const mode = req.query.mode === 'explore' ? 'explore' : 'normal'
   const categories = req.query.categories
-    ? req.query.categories.split(',').map((s) => s.trim()).filter(Boolean)
+    ? req.query.categories.split(',').map((s) => s.trim()).filter(Boolean).slice(0, 10)
     : []
   const publishers = req.query.publishers
-    ? req.query.publishers.split(',').map((s) => s.trim()).filter(Boolean)
+    ? req.query.publishers.split(',').map((s) => s.trim()).filter(Boolean).slice(0, 10)
     : []
   try {
     const result = await getRecommendations(userId, mode, { categories, publishers })
