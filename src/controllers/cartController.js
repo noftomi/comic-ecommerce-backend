@@ -83,6 +83,7 @@ const updateItem = async (req, res) => {
     } else {
       if (delta > 0) {
         const comic = await getPrisma().comic.findUnique({ where: { id: comicId }, select: { stock: true } });
+        if (!comic) return res.status(404).json({ error: 'Producto no encontrado' });
         if (newQty > comic.stock) {
           return res.status(400).json({ error: `Stock insuficiente. Disponible: ${comic.stock - existing.quantity}` });
         }
