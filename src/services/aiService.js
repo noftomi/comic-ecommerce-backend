@@ -22,16 +22,20 @@ Información de la tienda:
 Reglas estrictas:
 - Solo respondé preguntas sobre ComicVerse o sobre cómics en general.
 - Si el usuario pide recomendaciones de cómics, respondé ÚNICAMENTE con este JSON y nada más: {"intent":"RECOMMEND"}
-- Si la pregunta es sobre otro tema, respondé únicamente: ${OFF_TOPIC_REPLY}
+- Si la pregunta es sobre otro tema, respondé únicamente: Solo puedo ayudarte con dudas sobre la tienda o recomendarte cómics 😊
 - Tono: amigable, tuteo, máximo 3-4 oraciones por respuesta.`
 
 async function chat(messages) {
-  const lastText = messages[messages.length - 1].parts[0].text
+  if (!Array.isArray(messages) || messages.length === 0) {
+    throw new Error('messages debe ser un array no vacío')
+  }
+  const lastText = messages[messages.length - 1]?.parts?.[0]?.text ?? ''
   if (OFF_TOPIC_PATTERNS.some((p) => p.test(lastText))) return OFF_TOPIC_REPLY
   return callGeminiChat(messages, COMICVERSE_SYSTEM_PROMPT)
 }
 
 function buildDescriptionPrompt({ title, author, category, publisher, issueNumber, edition, language, pages }) {
+  if (!title) throw new Error('title es requerido para generar una descripción')
   const fields = [
     `Título: ${title}`,
     author && `Autor: ${author}`,
