@@ -37,14 +37,19 @@ const getRelated = async (req, res) => {
     const comic = await prisma.comic.findFirst({ where: { id, isActive: true } })
     if (!comic) return res.status(404).json({ error: 'Comic no encontrado' })
 
+    const orConditions = []
+    if (comic.category) orConditions.push({ category: comic.category })
+    if (comic.author) orConditions.push({ author: comic.author })
+
+    if (orConditions.length === 0) {
+      return res.json([])
+    }
+
     const related = await prisma.comic.findMany({
       where: {
         isActive: true,
         id: { not: id },
-        OR: [
-          { category: comic.category },
-          { author: comic.author },
-        ],
+        OR: orConditions,
       },
       include: { reviews: { select: { rating: true } } },
       take: 20,
