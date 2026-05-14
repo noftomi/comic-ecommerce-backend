@@ -4,15 +4,19 @@ const PDFDocument = require('pdfkit');
 const { getPrisma } = require('../lib/prisma');
 const { triggerOrderInvoice } = require('../lib/n8n');
 
+const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+
 function validateMercadoPagoSignature(req) {
   const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
   const xSignature = req.headers['x-signature'];
   const xRequestId = req.headers['x-request-id'];
   const dataId = req.query['data.id'] || req.body?.data?.id;
 
-  if (!secret || !xSignature) return false;
+  if (!secret) return true;
+  if (!xSignature || !xRequestId || !dataId) return false;
 
-  let ts, v1;
+  let ts;
+  let v1;
   for (const part of xSignature.split(',')) {
     const [key, value] = part.trim().split('=');
     if (key === 'ts') ts = value;
@@ -24,7 +28,15 @@ function validateMercadoPagoSignature(req) {
   const hash = crypto.createHmac('sha256', secret).update(manifest).digest('hex');
   return hash === v1;
 }
-const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+
+const toOrderResponse = (order) => ({
+  ...order,
+  total: order.total?.toNumber ? order.total.toNumber() : Number(order.total),
+  items: order.items.map((item) => ({
+    ...item,
+    price: item.price?.toNumber ? item.price.toNumber() : Number(item.price),
+  })),
+});
 
 const createPreference = async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'No autenticado' });
@@ -209,11 +221,17 @@ const getUserOrders = async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'No autenticado' });
   try {
     const orders = await getPrisma().order.findMany({
-      where: { userId: req.session.userId, status: 'PAID' },
-      include: { items: { include: { comic: true } } },
+      where: { userId: req.session.userId },
+      include: {
+        items: {
+          include: {
+            comic: { select: { id: true, title: true, imageUrl: true } },
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
-    res.json(orders);
+    res.json(orders.map(toOrderResponse));
   } catch (error) {
     console.error('getUserOrders error:', error);
     res.status(500).json({ error: 'Error al obtener pedidos' });

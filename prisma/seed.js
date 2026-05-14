@@ -1,6 +1,7 @@
 require('dotenv').config()
 const { PrismaClient } = require('@prisma/client')
 const { PrismaPg } = require('@prisma/adapter-pg')
+const bcrypt = require('bcryptjs')
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
@@ -613,25 +614,43 @@ const comics = [
 ]
 
 async function main() {
+  const adminEmail = 'admin@comicscorp.local'
+  const adminPassword = 'Admin123!'
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10)
+
+  console.log('Seeding admin user...')
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {
+      name: 'Admin Comics Corp',
+      password: hashedAdminPassword,
+      role: 'ADMIN',
+      emailVerified: true,
+      verificationToken: null,
+    },
+    create: {
+      email: adminEmail,
+      password: hashedAdminPassword,
+      name: 'Admin Comics Corp',
+      role: 'ADMIN',
+      emailVerified: true,
+    },
+  })
+  console.log(`Admin user ready: ${adminEmail} / ${adminPassword}`)
+
   console.log('Seeding comics...')
+  for (const comic of comics) {
+    const { id, ...comicData } = comic
 
-  // Limpiar en orden correcto respetando foreign keys
-  await prisma.orderItem.deleteMany()
-  await prisma.cartItem.deleteMany()
-  await prisma.review.deleteMany()
-  await prisma.$executeRaw`DELETE FROM "_Favorites"`
-  await prisma.comic.deleteMany()
-
-  // Reiniciar la secuencia para que los IDs queden 1, 2, 3...
-  await prisma.$executeRaw`ALTER SEQUENCE "Comic_id_seq" RESTART WITH 1`
-
-  // Insertar sin pasar id — Prisma los asigna en orden secuencial
-  const data = comics.map(({ id, ...rest }) => rest)
-  await prisma.comic.createMany({ data })
-
-  // Actualizar la secuencia al máximo id insertado
-  await prisma.$executeRaw`SELECT setval('"Comic_id_seq"', (SELECT MAX(id) FROM "Comic"))`
-
+    await prisma.comic.upsert({
+      where: { id },
+      update: comicData,
+      create: comicData,
+    })
+  }
+  await prisma.$executeRawUnsafe(
+    `SELECT setval(pg_get_serial_sequence('"Comic"', 'id'), COALESCE((SELECT MAX(id) FROM "Comic"), 1))`
+  )
   console.log(`✓ ${comics.length} comics seeded successfully`)
 }
 
