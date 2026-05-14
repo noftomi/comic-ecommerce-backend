@@ -27,6 +27,12 @@ app.use('/api/comics', require('./routes/comics'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/orders', require('./routes/orders'));
 
+// Rutas de IA
+const aiRateLimit = require('./middleware/aiRateLimit');
+app.use('/api/chat', aiRateLimit, require('./routes/chatRouter'));
+app.use('/api/recommendations', aiRateLimit, require('./routes/recommendRouter'));
+app.use('/api/generate-description', aiRateLimit, require('./routes/descriptionRouter'));
+
 app.get('/', (req, res) => res.json({ message: 'Comic eCommerce API running' }));
 
 const PORT = process.env.PORT || 3000;
