@@ -1,8 +1,29 @@
+const crypto = require('crypto');
 const { MercadoPagoConfig, Preference, Payment } = require('mercadopago');
 const PDFDocument = require('pdfkit');
 const { getPrisma } = require('../lib/prisma');
 const { triggerOrderInvoice } = require('../lib/n8n');
 
+function validateMercadoPagoSignature(req) {
+  const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
+  const xSignature = req.headers['x-signature'];
+  const xRequestId = req.headers['x-request-id'];
+  const dataId = req.query['data.id'] || req.body?.data?.id;
+
+  if (!secret || !xSignature) return false;
+
+  let ts, v1;
+  for (const part of xSignature.split(',')) {
+    const [key, value] = part.trim().split('=');
+    if (key === 'ts') ts = value;
+    if (key === 'v1') v1 = value;
+  }
+  if (!ts || !v1) return false;
+
+  const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
+  const hash = crypto.createHmac('sha256', secret).update(manifest).digest('hex');
+  return hash === v1;
+}
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 
 const createPreference = async (req, res) => {
@@ -84,6 +105,10 @@ const createPreference = async (req, res) => {
 };
 
 const handleWebhook = async (req, res) => {
+  if (!validateMercadoPagoSignature(req)) {
+    return res.status(400).json({ error: 'Invalid signature' });
+  }
+
   try {
     const { type, data } = req.body;
 
