@@ -51,7 +51,7 @@ async function buildHeatMap(userId) {
 async function getRecommendations(userId, mode = 'normal') {
   const prisma = getPrisma()
   const { heatMap, excludedIds } = await buildHeatMap(userId)
-  const hasHistory = Object.keys(heatMap).length > 0
+  const hasHistory = excludedIds.size > 0 || Object.keys(heatMap).length > 0
 
   const allComics = await prisma.comic.findMany({
     where: { isActive: true },
