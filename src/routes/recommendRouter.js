@@ -6,8 +6,14 @@ const { getRecommendations } = require('../services/recommender')
 router.get('/', requireAuth, async (req, res) => {
   const userId = req.session.userId
   const mode = req.query.mode === 'explore' ? 'explore' : 'normal'
+  const categories = req.query.categories
+    ? req.query.categories.split(',').map((s) => s.trim()).filter(Boolean)
+    : []
+  const publishers = req.query.publishers
+    ? req.query.publishers.split(',').map((s) => s.trim()).filter(Boolean)
+    : []
   try {
-    const result = await getRecommendations(userId, mode)
+    const result = await getRecommendations(userId, mode, { categories, publishers })
     res.json(result)
   } catch (err) {
     console.error('recommendations error:', err)
