@@ -3,7 +3,12 @@ const { GoogleGenerativeAI } = require('@google/generative-ai')
 let genAI
 
 function getGenAI() {
-  if (!genAI) genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+  if (!genAI) {
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'REPLACE_WITH_KEY') {
+      throw new Error('GEMINI_API_KEY no está configurada en .env')
+    }
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+  }
   return genAI
 }
 
@@ -24,6 +29,9 @@ async function callGemini(prompt, systemPrompt = '', options = {}) {
 }
 
 async function callGeminiChat(messages, systemPrompt = '') {
+  if (!Array.isArray(messages) || messages.length === 0) {
+    throw new Error('messages debe ser un array no vacío')
+  }
   try {
     const model = getGenAI().getGenerativeModel({
       model: 'gemini-1.5-flash',
