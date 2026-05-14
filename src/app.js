@@ -21,6 +21,7 @@ app.use('/api/favorites', require('./routes/favorites'));
 app.use('/api/uploads', require('./routes/uploads'));
 app.use('/api/management/comics', require('./routes/managementComics'));
 app.use('/api/admin/orders', require('./routes/adminOrders'));
+app.use('/api/seller/orders', require('./routes/sellerOrders'));
 app.use('/api/comics/:comicId/reviews', require('./routes/reviews'));
 app.use('/api/comics', require('./routes/comics'));
 app.use('/api/cart', require('./routes/cart'));
