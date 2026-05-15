@@ -84,9 +84,13 @@ const createPreference = async (req, res) => {
       });
     }
 
-    const preference = new Preference(client);
-    const mpResponse = await preference.create({
-      body: {
+    const mpRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         items: cartItems.map((item) => ({
           id: String(item.comicId),
           title: item.comic.title,
@@ -106,9 +110,15 @@ const createPreference = async (req, res) => {
         ...(process.env.NODE_ENV === 'production' && { auto_return: 'approved' }),
         external_reference: String(order.id),
         notification_url: `${process.env.BACKEND_URL}/api/orders/webhook`,
-      },
+      }),
     });
 
+    if (!mpRes.ok) {
+      const errBody = await mpRes.text();
+      throw new Error(`MercadoPago ${mpRes.status}: ${errBody}`);
+    }
+
+    const mpResponse = await mpRes.json();
     res.json({ preferenceId: mpResponse.id, initPoint: mpResponse.init_point, orderId: order.id });
   } catch (error) {
     console.error('createPreference error:', error);
